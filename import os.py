@@ -51,7 +51,7 @@ def process_files():
     
     # List of files to rename and process (old name → new name)
     files_to_rename = {
-        "raw_us_exports_total.csv": "Total Goods Exported US to World 2024.csv",
+        "raw_us_exports_total.csv": "Raw Total Goods Exported US to World 2024.csv",
     }
     
     for category in ["world"]:  # Add more categories if needed
@@ -69,8 +69,8 @@ def process_files():
                 new_path = rename_raw_file(old_path, new_name)
 
                 # Clean data and save under cleaned_data directory
-                process_cleaned_name = new_name.replace(".csv", "_cleaned.csv")
-                clean_data(new_path, process_cleaned_name)
+                cleaned_name = new_name.replace("Raw ", "").replace(".csv", "_cleaned.csv")
+                clean_data(new_path, cleaned_name)
             else:
                 print(f"File {old_path} not found, skipping.")
 
