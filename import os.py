@@ -8,7 +8,7 @@ def rename_raw_file(file_path, new_name):
     # Rename only if the names are different
     if file_path != new_file_path:
         os.rename(file_path, new_file_path)
-        print(f"Renamed raw file: {new_file_path}")
+        print(f"Renamed raw file to: {new_file_path}")
     
     return new_file_path  # Return new file path for processing
 
@@ -53,31 +53,27 @@ def process_files():
     base_raw_data_dir = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/raw_data"
     base_cleaned_data_dir = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/cleaned_data"
     
-    # List of raw files to rename and process (old name → new name)
-    files_to_rename = {
-        "raw_us_exports_total.csv": "Raw Total Goods Exported US to World 2024.csv",
-    }
-    
-    for category in ["world"]:  # Extend if needed
-        raw_data_dir = os.path.join(base_raw_data_dir, category)
-        cleaned_data_dir = os.path.join(base_cleaned_data_dir, category)
+    category = "world"
+    raw_data_dir = os.path.join(base_raw_data_dir, category)
+    cleaned_data_dir = os.path.join(base_cleaned_data_dir, category)
 
-        if not os.path.exists(raw_data_dir):
-            print(f"Directory {raw_data_dir} does not exist, skipping.")
-            continue
+    # Old and new raw file names
+    old_raw_name = "Total Goods Exported US to World 2024.csv"
+    new_raw_name = "raw_data_Total Goods Exported US to World 2024.csv"
 
-        for old_name, new_name in files_to_rename.items():
-            old_path = os.path.join(raw_data_dir, old_name)
+    old_raw_path = os.path.join(raw_data_dir, old_raw_name)
 
-            if os.path.exists(old_path):
-                # Rename raw file in its original directory
-                new_raw_path = rename_raw_file(old_path, new_name)
+    if os.path.exists(old_raw_path):
+        # Rename the raw file
+        new_raw_path = rename_raw_file(old_raw_path, new_raw_name)
 
-                # Clean data and save in the cleaned_data directory
-                cleaned_name = new_name.replace("Raw ", "").replace(".csv", "_cleaned.csv")
-                clean_data(new_raw_path, cleaned_data_dir, cleaned_name)
-            else:
-                print(f"File {old_path} not found, skipping.")
+        # Create cleaned file name
+        cleaned_name = new_raw_name.replace("raw_data_", "").replace(".csv", "_cleaned.csv")
+
+        # Clean data and save in cleaned_data directory
+        clean_data(new_raw_path, cleaned_data_dir, cleaned_name)
+    else:
+        print(f"File {old_raw_path} not found, skipping.")
 
 # Run the script
 process_files()
