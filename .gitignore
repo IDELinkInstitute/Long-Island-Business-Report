@@ -1,4 +1,3 @@
-
 # Ignore Python bytecode files
 *.pyc
 __pycache__/
@@ -9,15 +8,17 @@ __pycache__/
 # Ignore all Python scripts in the scripts folder
 scripts/*.py
 
+# Explicitly unignore the specific files you want to track
+!scripts/Raw\ Total\ Goods\ Exported\ US\ to\ World\ 2024.py
+!scripts/raw_data_Total\ Goods\ Exports\ from\ N.Y.\ to\ World\ 2024.py
+
 # Ignore temporary and backup files
 *~
 *.bak
 *.swp
-            
-            *
-!scripts/Raw\ Total\ Goods\ Exported\ US\ to\ World\ 2024.py
 
-/scripts/push_cleaned_data.ps1
+# Other file types to ignore (keep existing entries)
+scripts/push_cleaned_data.ps1
 /TAX.py
 /acs_2021_data.json
 /acs_2022_data.json
@@ -32,7 +33,7 @@ scripts/*.py
 /import requests2.py
 /raw_census_data.json
 /source_links/Raw Total Goods Exported US to World 2024.py
- 
+
 # Ignore specific cleaned files
 cleaned_data/world/raw_us_exports_total_cleaned.csv
 cleaned_data/world/us_exports_total_cleaned.csv
