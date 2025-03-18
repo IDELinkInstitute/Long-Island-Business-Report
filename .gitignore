@@ -14,3 +14,19 @@ scripts/*.py
 *.bak
 *.swp
             
+            *
+!scripts/Raw\ Total\ Goods\ Exported\ US\ to\ World\ 2024.py
+
+TAX.py
+acs_2021_data.json
+acs_2022_data.json
+acs_data.csv
+acs_data.pkl
+acs_data_1.pkl
+cbp_2021_data.json
+cbp_data.csv
+file_monitor.log
+import os.py
+import requests1.py
+import requests2.py
+raw_census_data.json
