@@ -17,16 +17,23 @@ scripts/*.py
             *
 !scripts/Raw\ Total\ Goods\ Exported\ US\ to\ World\ 2024.py
 
-TAX.py
-acs_2021_data.json
-acs_2022_data.json
-acs_data.csv
-acs_data.pkl
-acs_data_1.pkl
-cbp_2021_data.json
-cbp_data.csv
-file_monitor.log
-import os.py
-import requests1.py
-import requests2.py
-raw_census_data.json
+/scripts/push_cleaned_data.ps1
+/TAX.py
+/acs_2021_data.json
+/acs_2022_data.json
+/acs_data.csv
+/acs_data.pkl
+/acs_data_1.pkl
+/cbp_2021_data.json
+/cbp_data.csv
+/file_monitor.log
+/import os.py
+/import requests1.py
+/import requests2.py
+/raw_census_data.json
+/source_links/Raw Total Goods Exported US to World 2024.py
+ 
+# Ignore specific cleaned files
+cleaned_data/world/raw_us_exports_total_cleaned.csv
+cleaned_data/world/us_exports_total_cleaned.csv
+cleaned_data/world/Raw\ Total\ Goods\ Exported\ US\ to\ World\ 2024.py
