@@ -122,6 +122,9 @@ def process_files():
             print(f"Skipping missing directory: {raw_data_dir}")
             continue
 
+        # Debugging output: Print out the files in the raw_data directory
+        print(f"Files in {raw_data_dir}: {os.listdir(raw_data_dir)}")
+
         for filename in os.listdir(raw_data_dir):
             if filename.endswith(".py"):  # Processing .py files
                 raw_file_path = os.path.join(raw_data_dir, filename)
