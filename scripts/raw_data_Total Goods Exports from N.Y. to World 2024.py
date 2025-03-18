@@ -26,28 +26,27 @@ def clean_data(df):
         df.columns = df.columns.str.strip()
 
         # Ensure required columns exist
-        required_cols = ['Partner', 'Flow', 'Start Year', 'State', 'Unit', 'Product', '2024', '2023']
+        required_cols = ['Partner', '2024']
         missing_cols = [col for col in required_cols if col not in df.columns]
         if missing_cols:
             print(f"Missing required columns: {missing_cols}")
             return None
 
-        # Select and rename columns
-        df_cleaned = df[['Partner', 'Flow', 'Start Year', 'State', 'Unit', 'Product', '2024', '2023']].rename(columns={'2024': 'Trade Value'})
+        # Select only 'Partner' and '2024' columns
+        df_cleaned = df[['Partner', '2024']]
 
-        # Remove rows with missing values in 'Trade Value'
-        df_cleaned.dropna(subset=['Trade Value'], inplace=True)
+        # Remove rows with 'World' in the 'Partner' column
+        df_cleaned = df_cleaned[df_cleaned['Partner'] != 'World']
 
-        # Convert the 'Trade Value' columns to numeric values
-        df_cleaned['Trade Value'] = pd.to_numeric(df_cleaned['Trade Value'], errors='coerce')
+        # Remove rows with missing values in '2024' column
+        df_cleaned.dropna(subset=['2024'], inplace=True)
 
-        # Calculate the percentage change for 2024 compared to 2023
-        df_cleaned['% Change'] = ((df_cleaned['Trade Value'] - df_cleaned['2023']) / df_cleaned['2023']) * 100
+        # Convert the '2024' column to numeric values
+        df_cleaned['2024'] = pd.to_numeric(df_cleaned['2024'], errors='coerce')
 
-        # Sort by 2024 Trade Value and select top 10 countries
-        df_cleaned = df_cleaned.sort_values(by='Trade Value', ascending=False).head(10)
+        # Sort by '2024' Trade Value and select top 10 countries
+        df_cleaned = df_cleaned.sort_values(by='2024', ascending=False).head(10)
 
-        # Additional cleaning logic can be added here (e.g., formatting, removing duplicates)
         return df_cleaned
 
     except Exception as e:
