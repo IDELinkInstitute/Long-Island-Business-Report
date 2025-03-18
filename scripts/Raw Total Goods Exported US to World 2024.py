@@ -135,3 +135,32 @@ def run_script():
 # Execute the script
 if __name__ == "__main__":
     run_script()
+def git_pull_push():
+    try:
+        print("Pulling the latest changes from the remote repository...")
+        subprocess.run(["git", "pull"], check=True)
+        print("Pull successful")
+
+        current_script_path = os.path.realpath(__file__)
+        script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"
+        destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
+
+        # Normalize the paths by ensuring they're using the same path format
+        current_script_path = os.path.normpath(current_script_path)
+        destination_path = os.path.normpath(destination_path)
+
+        # Check if the script is not already in the target location
+        if current_script_path != destination_path:
+            shutil.copy(current_script_path, destination_path)
+            print(f"Script saved to: {destination_path}")
+        else:
+            print("Script is already in the target location. No copy needed.")
+
+        print("Adding, committing, and pushing changes to the repository...")
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(["git", "commit", "-m", "Automated data processing and script update"], check=True)
+        subprocess.run(["git", "push"], check=True)
+        print("Changes pushed to the repository.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Git operation failed: {e}")
