@@ -135,36 +135,3 @@ def run_script():
 # Execute the script
 if __name__ == "__main__":
     run_script()
-def git_pull_push():
-    try:
-        # Correct repository path (root directory)
-        repo_path = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report"
-
-        # Pull the latest changes from the repository
-        print("Pulling the latest changes from the remote repository...")
-        repo = git.Repo(repo_path)
-        repo.remotes.origin.pull()
-
-        # Ensure the script is in the correct location
-        script_folder = os.path.join(repo_path, 'scripts')
-        if not os.path.exists(script_folder):
-            os.makedirs(script_folder)
-        
-        # Determine if the script is already in the target location
-        current_script_path = os.path.abspath(__file__)
-        destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
-        
-        if current_script_path != destination_path:
-            print(f"Copying script to the scripts folder: {destination_path}")
-            shutil.copy(current_script_path, destination_path)
-        else:
-            print("Script is already in the target location. No copy needed.")
-        
-        # Commit and push changes to the repository
-        print("Adding and committing changes to the repository...")
-        repo.git.add(all=True)
-        repo.index.commit("Automated data processing and script update")
-        repo.remotes.origin.push()
-
-    except Exception as e:
-        print(f"Git operation failed: {e}")
