@@ -7,7 +7,7 @@ import pandas as pd
 def rename_raw_file(file_path, prefix="raw_data_"):
     dir_name, file_name = os.path.split(file_path)
     
-    # Ensure the new name starts with the prefix if it doesn't already have it
+    # Ensure the new name starts with the prefix
     new_name = f"{prefix}{file_name}" if not file_name.startswith(prefix) else file_name
     new_file_path = os.path.join(dir_name, new_name)
 
@@ -19,19 +19,19 @@ def rename_raw_file(file_path, prefix="raw_data_"):
     return new_file_path
 
 # Function to clean data
-def clean_data(df, target_column='2024'):
+def clean_data(df):
     """Applies various cleaning steps to the DataFrame."""
     try:
         # Clean column names
         df.columns = df.columns.str.strip()
 
         # Ensure required columns exist
-        required_cols = ['Country', target_column]
+        required_cols = ['Country', '2024']
         if not all(col in df.columns for col in required_cols):
             raise ValueError(f"Missing required columns: {required_cols}")
 
         # Select and rename columns
-        df_cleaned = df[['Country', target_column]].rename(columns={target_column: 'Trade Value'})
+        df_cleaned = df[['Country', '2024']].rename(columns={'2024': 'Trade Value'})
 
         # Remove rows with missing values
         df_cleaned.dropna(subset=['Trade Value'], inplace=True)
@@ -44,7 +44,7 @@ def clean_data(df, target_column='2024'):
         return None
 
 # Function to process a single file
-def process_file(raw_file_path, cleaned_dir, target_column='2024'):
+def process_file(raw_file_path, cleaned_dir):
     try:
         # Rename the raw file if needed
         renamed_raw_path = rename_raw_file(raw_file_path)
@@ -53,27 +53,16 @@ def process_file(raw_file_path, cleaned_dir, target_column='2024'):
         df = pd.read_csv(renamed_raw_path)
 
         # Clean data
-        df_cleaned = clean_data(df, target_column)
+        df_cleaned = clean_data(df)
         if df_cleaned is None:
             return  # Skip saving if cleaning failed
 
-        # Create cleaned file name (only allow the desired file format)
+        # Create cleaned file name
         cleaned_name = os.path.basename(renamed_raw_path).replace("raw_data_", "").replace(".csv", "_cleaned.csv")
-        
-        # Check if the file name matches the pattern for the desired cleaned file
-        if "Total Goods Exported US to World 2024" not in cleaned_name:
-            print(f"Skipping file: {cleaned_name} - does not match desired pattern")
-            return
-
         cleaned_file_path = os.path.join(cleaned_dir, cleaned_name)
 
         # Ensure directory exists
         os.makedirs(cleaned_dir, exist_ok=True)
-
-        # Check if cleaned file exists. If it does, remove and replace it.
-        if os.path.exists(cleaned_file_path):
-            os.remove(cleaned_file_path)
-            print(f"Existing cleaned file found, replacing: {cleaned_file_path}")
 
         # Save cleaned data
         df_cleaned.to_csv(cleaned_file_path, index=False)
@@ -98,15 +87,15 @@ def git_pull_push():
         current_script_path = os.path.normpath(current_script_path)
         destination_path = os.path.normpath(destination_path)
 
-        # Check if the script is not already in the target location (scripts folder)
+        # Check if the script is not already in the target location
         if current_script_path != destination_path:
             shutil.copy(current_script_path, destination_path)
             print(f"Script saved to: {destination_path}")
         else:
             print("Script is already in the target location. No copy needed.")
 
-        # Add, commit, and push changes to the repository
-        print("Adding and committing changes to the repository...")
+        # Add all changes, commit, and push to the repository
+        print("Adding, committing, and pushing changes to the repository...")
         subprocess.run(["git", "add", "."], check=True)
         subprocess.run(["git", "commit", "-m", "Automated data processing and script update"], check=True)
         subprocess.run(["git", "push"], check=True)
