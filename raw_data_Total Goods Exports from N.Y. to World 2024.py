@@ -88,6 +88,10 @@ def git_pull_push():
         script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"
         destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
 
+        # Ensure the destination folder exists
+        if not os.path.exists(script_folder):
+            os.makedirs(script_folder)
+
         # Normalize the paths by ensuring they're using the same path format
         current_script_path = os.path.normpath(current_script_path)
         destination_path = os.path.normpath(destination_path)
