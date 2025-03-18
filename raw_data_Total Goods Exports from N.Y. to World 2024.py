@@ -86,18 +86,24 @@ def git_pull_push():
         # Save the current script (this script) to the scripts folder only if it's not already there
         current_script_path = os.path.realpath(__file__)
         script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"
+        
+        # Define destination path for the script file
         destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
 
         # Normalize the paths by ensuring they're using the same path format
         current_script_path = os.path.normpath(current_script_path)
         destination_path = os.path.normpath(destination_path)
 
-        # Check if the script is not already in the target location
-        if current_script_path != destination_path:
-            shutil.copy(current_script_path, destination_path)
-            print(f"Script saved to: {destination_path}")
+        # Ensure the script is not being copied to any unintended directory (e.g., source folder)
+        if not current_script_path.startswith("C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/source"):
+            # Only copy to the scripts folder if it's not already there
+            if current_script_path != destination_path:
+                shutil.copy(current_script_path, destination_path)
+                print(f"Script saved to: {destination_path}")
+            else:
+                print("Script is already in the target location. No copy needed.")
         else:
-            print("Script is already in the target location. No copy needed.")
+            print("Script should not be saved in the source folder.")
 
         # Add all changes, commit, and push to the repository
         print("Adding, committing, and pushing changes to the repository...")
