@@ -22,7 +22,7 @@ def rename_raw_file(file_path, prefix="raw_data_"):
 def clean_data(df):
     """Applies various cleaning steps to the DataFrame."""
     try:
-        # Clean column names (remove extra spaces)
+        # Clean column names
         df.columns = df.columns.str.strip()
 
         # Ensure required columns exist
@@ -30,18 +30,13 @@ def clean_data(df):
         if not all(col in df.columns for col in required_cols):
             raise ValueError(f"Missing required columns: {required_cols}")
 
-        # Select relevant columns and rename if necessary
-        df_cleaned = df[['Partner', 'Flow', 'Start Year', 'State', 'Unit', 'Product', '2024']]
+        # Select and rename columns
+        df_cleaned = df[['Partner', 'Flow', 'Start Year', 'State', 'Unit', 'Product', '2024']].rename(columns={'2024': 'Trade Value'})
 
-        # Rename '2024' to 'Trade Value' for clarity
-        df_cleaned.rename(columns={'2024': 'Trade Value'}, inplace=True)
-
-        # Remove rows with missing 'Trade Value'
+        # Remove rows with missing values in 'Trade Value'
         df_cleaned.dropna(subset=['Trade Value'], inplace=True)
 
-        # Additional cleaning (e.g., remove duplicates)
-        df_cleaned.drop_duplicates(inplace=True)
-
+        # Additional cleaning logic can be added here (e.g., formatting, removing duplicates)
         return df_cleaned
 
     except Exception as e:
@@ -85,13 +80,13 @@ def git_pull_push():
 
         # Save the current script (this script) to the scripts folder only if it's not already there
         current_script_path = os.path.realpath(__file__)
-        script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"
+        script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"  # Correct folder path
         destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
 
         # Ensure the destination folder exists
         if not os.path.exists(script_folder):
             os.makedirs(script_folder)
-
+        
         # Normalize the paths by ensuring they're using the same path format
         current_script_path = os.path.normpath(current_script_path)
         destination_path = os.path.normpath(destination_path)
