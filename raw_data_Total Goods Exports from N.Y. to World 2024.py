@@ -80,7 +80,7 @@ def git_pull_push():
 
         # Save the current script (this script) to the scripts folder only if it's not already there
         current_script_path = os.path.realpath(__file__)
-        script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"  # Correct folder path
+        script_folder = os.path.join(os.path.expanduser("~"), "Documents", "GitHub", "Long-Island-Business-Report", "scripts")  # Ensure correct folder path
         destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
 
         # Ensure the destination folder exists
