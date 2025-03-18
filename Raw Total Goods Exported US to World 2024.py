@@ -1,7 +1,6 @@
 import os
 import shutil
 import pandas as pd
-import subprocess
 
 # Function to rename raw files
 def rename_raw_file(file_path, new_name):
@@ -33,7 +32,7 @@ def clean_data(file_path, cleaned_name):
         df_cleaned = df_cleaned.dropna(subset=['Trade Value'])
 
         # Define the cleaned file path
-        cleaned_dir = file_path.replace("raw_data", "cleaned_data")
+        cleaned_dir = file_path.replace("raw_data", "cleaned_data")  # Ensure correct path
         cleaned_file_path = os.path.join(os.path.dirname(cleaned_dir), cleaned_name)
 
         # Ensure cleaned data directory exists
@@ -44,43 +43,31 @@ def clean_data(file_path, cleaned_name):
         
         print(f"Data cleaned and saved to {cleaned_file_path}")
 
-        return cleaned_file_path
-
     except Exception as e:
         print(f"Error processing {file_path}: {str(e)}")
 
-# Function to handle git commands (pull, add, commit, push)
-def git_operations():
-    try:
-        # Pull the latest changes from the remote repository
-        print("Pulling latest changes from repository...")
-        subprocess.run(["git", "pull"], check=True)
+# Function to rename the script file itself to match naming convention
+def rename_script():
+    script_name = os.path.basename(__file__)  # Get the current script file name
+    new_script_name = "Raw Total Goods Exported US to World 2024.py"  # Desired script name
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+    
+    new_script_path = os.path.join(script_dir, new_script_name)
+    
+    # Rename the script file
+    if script_name != new_script_name:
+        shutil.move(os.path.join(script_dir, script_name), new_script_path)
+        print(f"Script renamed to: {new_script_path}")
+    else:
+        print("Script already named correctly.")
 
-        # Stage all changes (including renamed files, cleaned data)
-        print("Staging changes for commit...")
-        subprocess.run(["git", "add", "."], check=True)
-
-        # Commit changes with a message
-        print("Committing changes...")
-        subprocess.run(['git', 'commit', '-m', 'Automated data cleaning and script renaming'], check=True)
-
-        # Push the changes to the remote repository
-        print("Pushing changes to repository...")
-        subprocess.run(["git", "push"], check=True)
-        
-        print("Changes pushed successfully.")
-
-    except subprocess.CalledProcessError as e:
-        print(f"Git command failed: {str(e)}")
-
-# Main function to rename, clean, update files, and handle git operations
+# Main function to rename, clean, and update files
 def process_files():
     base_raw_data_dir = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/raw_data"
-    scripts_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"  # Path to scripts folder
     
     # List of files to rename and process (old name → new name)
     files_to_rename = {
-        "raw_us_exports_total.csv": "Raw Total Goods Exported US to World 2024.csv",
+        "raw_us_exports_total.csv": "Raw Total Goods Exported US to World 2024.csv",  # Specify any files you want to rename
     }
     
     for category in ["world"]:  # Add more categories if needed
@@ -99,19 +86,14 @@ def process_files():
 
                 # Clean data and save under cleaned_data directory
                 cleaned_name = new_name.replace("Raw ", "").replace(".csv", "_cleaned.csv")
-                cleaned_file_path = clean_data(new_path, cleaned_name)
-
-                # Save the script itself to the 'scripts' folder
-                script_name = new_name.replace("Raw ", "").replace(".csv", ".py")
-                script_file_path = os.path.join(scripts_folder, script_name)
-                shutil.copy(__file__, script_file_path)
-                print(f"Script saved to {script_file_path}")
-
-                # Perform git operations (pull, push, etc.)
-                git_operations()
-
+                clean_data(new_path, cleaned_name)
             else:
                 print(f"File {old_path} not found, skipping.")
 
 # Run the script
-process_files()
+if __name__ == "__main__":
+    # Rename the script to match the naming convention first
+    rename_script()
+
+    # Now process the files
+    process_files()
