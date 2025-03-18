@@ -49,8 +49,10 @@ def process_file(raw_file_path, cleaned_dir):
         # Rename the raw file if needed
         renamed_raw_path = rename_raw_file(raw_file_path)
 
-        # Load data
-        df = pd.read_csv(renamed_raw_path)
+        # Load data assuming Python file (.py) contains pandas DataFrame in a variable like df
+        # Use exec to execute the Python file (unsafe for production, consider other ways for better security)
+        with open(renamed_raw_path) as file:
+            exec(file.read())  # Assumes the script defines a DataFrame called `df`
 
         # Clean data
         df_cleaned = clean_data(df)
@@ -58,7 +60,7 @@ def process_file(raw_file_path, cleaned_dir):
             return  # Skip saving if cleaning failed
 
         # Create cleaned file name
-        cleaned_name = os.path.basename(renamed_raw_path).replace("raw_data_", "").replace(".csv", "_cleaned.csv")
+        cleaned_name = os.path.basename(renamed_raw_path).replace("raw_data_", "").replace(".py", "_cleaned.csv")
         cleaned_file_path = os.path.join(cleaned_dir, cleaned_name)
 
         # Ensure directory exists
@@ -121,12 +123,12 @@ def process_files():
             continue
 
         for filename in os.listdir(raw_data_dir):
-            if filename.endswith(".csv"):
+            if filename.endswith(".py"):  # Processing .py files
                 raw_file_path = os.path.join(raw_data_dir, filename)
                 print(f"Processing: {raw_file_path}")
                 process_file(raw_file_path, cleaned_data_dir)
             else:
-                print(f"Skipping non-CSV file: {filename}")
+                print(f"Skipping non-Python file: {filename}")
 
 # Run the script
 def run_script():
