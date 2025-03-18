@@ -64,6 +64,11 @@ def process_file(raw_file_path, cleaned_dir):
         # Ensure directory exists
         os.makedirs(cleaned_dir, exist_ok=True)
 
+        # Check if cleaned file exists. If it does, remove and replace it.
+        if os.path.exists(cleaned_file_path):
+            os.remove(cleaned_file_path)
+            print(f"Existing cleaned file found, replacing: {cleaned_file_path}")
+
         # Save cleaned data
         df_cleaned.to_csv(cleaned_file_path, index=False)
         print(f"Cleaned data saved to: {cleaned_file_path}")
