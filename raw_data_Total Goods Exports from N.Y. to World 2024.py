@@ -18,31 +18,31 @@ def rename_raw_file(file_path, prefix="raw_data_"):
     
     return new_file_path
 
-# Function to clean data for the top 10 countries based on the 2024 trade value
+# Function to clean data
 def clean_data(df):
     """Applies various cleaning steps to the DataFrame."""
     try:
-        # Clean column names (strip any unwanted spaces)
+        # Clean column names (remove extra spaces)
         df.columns = df.columns.str.strip()
 
-        # Ensure the required columns exist for the dataset
+        # Ensure required columns exist
         required_cols = ['Partner', 'Flow', 'Start Year', 'State', 'Unit', 'Product', '2024']
         if not all(col in df.columns for col in required_cols):
             raise ValueError(f"Missing required columns: {required_cols}")
 
-        # Select relevant columns (Partner and 2024)
-        df_cleaned = df[['Partner', '2024']].rename(columns={'2024': 'Trade Value'})
+        # Select relevant columns and rename if necessary
+        df_cleaned = df[['Partner', 'Flow', 'Start Year', 'State', 'Unit', 'Product', '2024']]
 
-        # Remove rows with missing trade values
+        # Rename '2024' to 'Trade Value' for clarity
+        df_cleaned.rename(columns={'2024': 'Trade Value'}, inplace=True)
+
+        # Remove rows with missing 'Trade Value'
         df_cleaned.dropna(subset=['Trade Value'], inplace=True)
 
-        # Sort by 'Trade Value' in descending order to capture the top 10 countries for 2024
-        df_cleaned_sorted = df_cleaned.sort_values(by='Trade Value', ascending=False)
+        # Additional cleaning (e.g., remove duplicates)
+        df_cleaned.drop_duplicates(inplace=True)
 
-        # Get the top 10 rows for the 2024 data
-        df_top_10 = df_cleaned_sorted.head(10)
-
-        return df_top_10
+        return df_cleaned
 
     except Exception as e:
         print(f"Error cleaning data: {str(e)}")
@@ -86,24 +86,18 @@ def git_pull_push():
         # Save the current script (this script) to the scripts folder only if it's not already there
         current_script_path = os.path.realpath(__file__)
         script_folder = "C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/scripts"
-        
-        # Define destination path for the script file
         destination_path = os.path.join(script_folder, os.path.basename(current_script_path))
 
         # Normalize the paths by ensuring they're using the same path format
         current_script_path = os.path.normpath(current_script_path)
         destination_path = os.path.normpath(destination_path)
 
-        # Ensure the script is not being copied to any unintended directory (e.g., source folder)
-        if not current_script_path.startswith("C:/Users/16316/Documents/GitHub/Long-Island-Business-Report/source"):
-            # Only copy to the scripts folder if it's not already there
-            if current_script_path != destination_path:
-                shutil.copy(current_script_path, destination_path)
-                print(f"Script saved to: {destination_path}")
-            else:
-                print("Script is already in the target location. No copy needed.")
+        # Check if the script is not already in the target location
+        if current_script_path != destination_path:
+            shutil.copy(current_script_path, destination_path)
+            print(f"Script saved to: {destination_path}")
         else:
-            print("Script should not be saved in the source folder.")
+            print("Script is already in the target location. No copy needed.")
 
         # Add all changes, commit, and push to the repository
         print("Adding, committing, and pushing changes to the repository...")
