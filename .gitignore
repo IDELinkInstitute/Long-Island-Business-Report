@@ -38,3 +38,4 @@ scripts/push_cleaned_data.ps1
 cleaned_data/world/raw_us_exports_total_cleaned.csv
 cleaned_data/world/us_exports_total_cleaned.csv
 cleaned_data/world/Raw\ Total\ Goods\ Exported\ US\ to\ World\ 2024.py
+raw_data/us_exports_total/
